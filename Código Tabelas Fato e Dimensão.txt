@@ -1,0 +1,77 @@
+Tabela Fato:
+
+let
+    Fonte = Csv.Document(File.Contents("C:\Users\05774842142\Downloads\hosp_data.csv"),[Delimiter=",", Columns=19, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Fonte, [PromoteAllScalars=true]),
+    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"", Int64.Type}, {"facility_id", Int64.Type}, {"facility_name", type text}, {"address", type text}, {"city/town", type text}, {"state", type text}, {"zip_code", Int64.Type}, {"county/parish", type text}, {"telephone_number", type text}, {"condition", type text}, {"measure_id", type text}, {"measure_name", type text}, {"score", Int64.Type}, {"sample", type text}, {"footnote", type text}, {"start_date", type date}, {"end_date", type date}, {"region", type text}, {"mean_per_state", Int64.Type}}),
+    #"Tipo Alterado1" = Table.TransformColumnTypes(#"Tipo Alterado",{{"footnote", Int64.Type}}),
+    #"Colunas Removidas" = Table.RemoveColumns(#"Tipo Alterado1",{"footnote"}),
+    #"Colunas Renomeadas" = Table.RenameColumns(#"Colunas Removidas",{{"address", "Endereco"}, {"city/town", "Cidade"}, {"", "ID_TAB"}, {"condition", "Condicao"}, {"county/parish", "Pais"}, {"end_date", "Fim_data"}, {"facility_id", "ID_Instalacao"}, {"facility_name", "Nome_Instalacao"}, {"mean_per_state", "Media_por_estado"}, {"measure_id", "ID_Tratamento"}, {"measure_name", "Nome_Tratamento"}, {"region", "Regiao"}, {"sample", "Amostra"}, {"score", "Pontuacao_tratamento"}, {"start_date", "Comeco_data"}, {"state", "Estado"}, {"telephone_number", "Numero_telefone"}, {"zip_code", "Codigo_zip"}}),
+    #"Índice Adicionado" = Table.AddIndexColumn(#"Colunas Renomeadas", "Índice", 1, 1, Int64.Type),
+    #"Índice Adicionado1" = Table.AddIndexColumn(#"Índice Adicionado", "Índice.1", 100, 1, Int64.Type),
+    #"Colunas Renomeadas2" = Table.RenameColumns(#"Índice Adicionado1",{{"Índice", "ID_Regiao"}, {"Índice.1", "ID_Condicao"}}),
+    #"Outras Colunas Removidas" = Table.SelectColumns(#"Colunas Renomeadas2",{"ID_TAB", "ID_Regiao", "ID_Condicao", "ID_Instalacao"}),
+    #"Colunas Renomeadas1" = Table.RenameColumns(#"Outras Colunas Removidas",{{"ID_TAB", "ID_DATA"}})
+in
+    #"Colunas Renomeadas1"
+
+Tabelas Dimensão:
+
+dData----------------------------
+let
+    Fonte = Csv.Document(File.Contents("C:\Users\05774842142\Downloads\hosp_data.csv"),[Delimiter=",", Columns=19, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Fonte, [PromoteAllScalars=true]),
+    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"", Int64.Type}, {"facility_id", Int64.Type}, {"facility_name", type text}, {"address", type text}, {"city/town", type text}, {"state", type text}, {"zip_code", Int64.Type}, {"county/parish", type text}, {"telephone_number", type text}, {"condition", type text}, {"measure_id", type text}, {"measure_name", type text}, {"score", Int64.Type}, {"sample", type text}, {"footnote", type text}, {"start_date", type date}, {"end_date", type date}, {"region", type text}, {"mean_per_state", Int64.Type}}),
+    #"Tipo Alterado1" = Table.TransformColumnTypes(#"Tipo Alterado",{{"footnote", Int64.Type}}),
+    #"Colunas Removidas" = Table.RemoveColumns(#"Tipo Alterado1",{"footnote"}),
+    #"Outras Colunas Removidas" = Table.SelectColumns(#"Colunas Removidas",{"", "start_date", "end_date"}),
+    #"Colunas Renomeadas" = Table.RenameColumns(#"Outras Colunas Removidas",{{"", "ID_TAB"}, {"end_date", "Fim_data"}, {"start_date", "Comeco_data"}}),
+    #"Coluna Duplicada" = Table.DuplicateColumn(#"Colunas Renomeadas", "Comeco_data", "Comeco_data - Copiar"),
+    #"Coluna Duplicada1" = Table.DuplicateColumn(#"Coluna Duplicada", "Fim_data", "Fim_data - Copiar"),
+    #"Colunas Renomeadas1" = Table.RenameColumns(#"Coluna Duplicada1",{{"Comeco_data - Copiar", "ANO_COMECO"}, {"Fim_data - Copiar", "ANO_FIM"}}),
+    #"Colunas Removidas1" = Table.RemoveColumns(#"Colunas Renomeadas1",{"ANO_COMECO", "ANO_FIM"}),
+    #"Coluna Duplicada2" = Table.DuplicateColumn(#"Colunas Removidas1", "Comeco_data", "Comeco_data - Copiar"),
+    #"Coluna Duplicada3" = Table.DuplicateColumn(#"Coluna Duplicada2", "Fim_data", "Fim_data - Copiar"),
+    #"Colunas Renomeadas2" = Table.RenameColumns(#"Coluna Duplicada3",{{"Comeco_data - Copiar", "ANO_COMECO"}, {"Fim_data - Copiar", "ANO_FIM"}, {"ID_TAB", "ID_DATA"}})
+in
+    #"Colunas Renomeadas2"
+
+dRegiao-----------------------------
+let
+    Fonte = Csv.Document(File.Contents("C:\Users\05774842142\Downloads\hosp_data.csv"),[Delimiter=",", Columns=19, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Fonte, [PromoteAllScalars=true]),
+    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"", Int64.Type}, {"facility_id", Int64.Type}, {"facility_name", type text}, {"address", type text}, {"city/town", type text}, {"state", type text}, {"zip_code", Int64.Type}, {"county/parish", type text}, {"telephone_number", type text}, {"condition", type text}, {"measure_id", type text}, {"measure_name", type text}, {"score", Int64.Type}, {"sample", type text}, {"footnote", type text}, {"start_date", type date}, {"end_date", type date}, {"region", type text}, {"mean_per_state", Int64.Type}}),
+    #"Tipo Alterado1" = Table.TransformColumnTypes(#"Tipo Alterado",{{"footnote", Int64.Type}}),
+    #"Colunas Removidas" = Table.RemoveColumns(#"Tipo Alterado1",{"footnote"}),
+    #"Outras Colunas Removidas" = Table.SelectColumns(#"Colunas Removidas",{"city/town", "state", "county/parish", "region"}),
+    #"Colunas Renomeadas" = Table.RenameColumns(#"Outras Colunas Removidas",{{"city/town", "Cidade"}, {"region", "Regiao"}, {"state", "Estado"}, {"county/parish", "Condado"}}),
+    #"Índice Adicionado" = Table.AddIndexColumn(#"Colunas Renomeadas", "Índice", 0, 1, Int64.Type),
+    #"Colunas Renomeadas1" = Table.RenameColumns(#"Índice Adicionado",{{"Índice", "ID_Regiao"}})
+in
+    #"Colunas Renomeadas1"
+
+dCondicao----------------------------------
+let
+    Fonte = Csv.Document(File.Contents("C:\Users\05774842142\Downloads\hosp_data.csv"),[Delimiter=",", Columns=19, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Fonte, [PromoteAllScalars=true]),
+    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"", Int64.Type}, {"facility_id", Int64.Type}, {"facility_name", type text}, {"address", type text}, {"city/town", type text}, {"state", type text}, {"zip_code", Int64.Type}, {"county/parish", type text}, {"telephone_number", type text}, {"condition", type text}, {"measure_id", type text}, {"measure_name", type text}, {"score", Int64.Type}, {"sample", type text}, {"footnote", type text}, {"start_date", type date}, {"end_date", type date}, {"region", type text}, {"mean_per_state", Int64.Type}}),
+    #"Tipo Alterado1" = Table.TransformColumnTypes(#"Tipo Alterado",{{"footnote", Int64.Type}}),
+    #"Colunas Removidas" = Table.RemoveColumns(#"Tipo Alterado1",{"footnote"}),
+    #"Outras Colunas Removidas" = Table.SelectColumns(#"Colunas Removidas",{"condition", "measure_id", "measure_name", "score"}),
+    #"Colunas Renomeadas" = Table.RenameColumns(#"Outras Colunas Removidas",{{"condition", "Condicao"}, {"measure_id", "ID_Tratamento"}, {"measure_name", "Nome_Tratamento"}, {"score", "Pontuacao_tratamento"}}),
+    #"Índice Adicionado" = Table.AddIndexColumn(#"Colunas Renomeadas", "Índice", 100, 1, Int64.Type),
+    #"Colunas Renomeadas1" = Table.RenameColumns(#"Índice Adicionado",{{"Índice", "ID_Condicao"}})
+in
+    #"Colunas Renomeadas1"
+
+dInstalacao--------------------------------
+let
+    Fonte = Csv.Document(File.Contents("C:\Users\05774842142\Downloads\hosp_data.csv"),[Delimiter=",", Columns=19, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Fonte, [PromoteAllScalars=true]),
+    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"", Int64.Type}, {"facility_id", Int64.Type}, {"facility_name", type text}, {"address", type text}, {"city/town", type text}, {"state", type text}, {"zip_code", Int64.Type}, {"county/parish", type text}, {"telephone_number", type text}, {"condition", type text}, {"measure_id", type text}, {"measure_name", type text}, {"score", Int64.Type}, {"sample", type text}, {"footnote", type text}, {"start_date", type date}, {"end_date", type date}, {"region", type text}, {"mean_per_state", Int64.Type}}),
+    #"Tipo Alterado1" = Table.TransformColumnTypes(#"Tipo Alterado",{{"footnote", Int64.Type}}),
+    #"Colunas Removidas" = Table.RemoveColumns(#"Tipo Alterado1",{"footnote"}),
+    #"Outras Colunas Removidas" = Table.SelectColumns(#"Colunas Removidas",{"facility_id", "facility_name"}),
+    #"Colunas Renomeadas" = Table.RenameColumns(#"Outras Colunas Removidas",{{"facility_id", "ID_Instalacao"}, {"facility_name", "Nome_Instalacao"}})
+in
+    #"Colunas Renomeadas"
