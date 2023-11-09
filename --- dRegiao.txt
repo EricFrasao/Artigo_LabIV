@@ -1,0 +1,13 @@
+--- dRegiao
+
+CREATE TABLE `stagin_lab`.`dregiao` (
+  `iddRegiao` INT NOT NULL AUTO_INCREMENT,
+  `Cidade` VARCHAR(45) NOT NULL,
+  `Condado` VARCHAR(45) NOT NULL,
+  `Estado` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`iddRegiao`));
+
+INSERT into dregiao (
+  iddRegiao,
+  Cidade, Condado, Estado)
+select 'facility_id', 'city/town', 'county/parish', 'state' from database_lab

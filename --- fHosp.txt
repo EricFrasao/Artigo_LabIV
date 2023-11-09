@@ -1,0 +1,40 @@
+--- fHosp
+
+CREATE TABLE IF NOT EXISTS `MMD_lab`.`FatoHosp` (
+  `iddTempo` INT NOT NULL,
+  `iddCondicao` INT NOT NULL,
+  `iddTratamento` INT NOT NULL,
+  `idRegiao` INT NOT NULL,
+  `idInstalacao` INT NOT NULL,
+  PRIMARY KEY (`iddTempo`, `iddCondicao`, `iddTratamento`, `idRegiao`, `idInstalacao`),
+  INDEX `fk_FatoMatricula_DTempo1_idx` (`iddTempo` ASC) VISIBLE,
+  INDEX `fk_FatoMatricula_DCondicao1_idx` (`iddCondicao` ASC) VISIBLE,
+  INDEX `fk_FatoMatricula_DTratamento1_idx` (`iddTratamento` ASC) VISIBLE,
+  INDEX `fk_FatoMatricula_DRegiao1_idx` (`idRegiao` ASC) VISIBLE,
+  INDEX `fk_FatoMatricula_DInstalacao1_idx` (`idInstalacao` ASC) VISIBLE,
+  CONSTRAINT `fk_FatoHosp_dTempo`
+    FOREIGN KEY (`iddTempo`)
+    REFERENCES `MMD_lab`.`dTempo` (`idDimTempo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_FatoHosp_DCondicao1`
+    FOREIGN KEY (`idDimSexo`)
+    REFERENCES `MMD_lab`.`dCondicao` (`iddCondicao`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_FatoHosp_DTratamento1`
+    FOREIGN KEY (`idDimCurso`)
+    REFERENCES `MMD_lab`.`dTratamento` (`iddTratamento`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_FatoHosp_DRegiao1`
+    FOREIGN KEY (`idDimRaca`)
+    REFERENCES `MMD_lab`.`dRegiao` (`idRegiao`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_FatoHosp_DInstalacao1`
+    FOREIGN KEY (`idDimTurno`)
+    REFERENCES `MMD_lab`.`DInstalacao` (`idInstalacao`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+ENGINE = InnoDB;

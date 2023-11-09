@@ -1,0 +1,11 @@
+--- dInstalacao
+
+CREATE TABLE `stagin_lab`.`dinstalacao` (
+  `iddInstalacao` INT NOT NULL AUTO_INCREMENT,
+  `Nomeinstalacao` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`iddinstalacao`));
+
+INSERT into dinstalacao (
+  iddinstalacao,
+  Nomeinstalacao)
+select 'facility_id', 'facility_name' from database_lab

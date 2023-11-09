@@ -1,0 +1,12 @@
+--- dCondicao
+
+CREATE TABLE `stagin_lab`.`dcondicao` (
+  `iddCondicao` INT NOT NULL AUTO_INCREMENT,
+  `Condicao` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`iddCondicao`));
+
+INSERT into dcondicao (
+  iddCondicao,
+  Condicao)
+select 'id_condition', 'condition' from database_lab
+

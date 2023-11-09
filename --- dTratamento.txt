@@ -1,0 +1,12 @@
+--- dTratamento
+
+CREATE TABLE `stagin_lab`.`dtratamento` (
+  `iddTratamento` INT NOT NULL AUTO_INCREMENT,
+  `NomeTratamento` VARCHAR(45) NULL,
+  `Pontuacao` DOUBLE NULL,
+  PRIMARY KEY (`iddTratamento`));
+
+INSERT into dtratamento (
+  iddTratamento,
+  NomeTratamento, pontuacao)
+select 'measure_id', 'measure_name', 'score' from database_lab
